@@ -1,0 +1,37 @@
+- name: Install K8s binaries
+  hosts: all
+  vars:
+    k8s_binaries:
+      - kubeadm
+      - kubelet
+      - kubectl
+  tasks:
+    - name: add kubernetes apt
+      block:
+        - name: kubernetes | apt key
+          ansible.builtin.get_url:
+            url: https://pkgs.k8s.io/core:/stable:/v1.27/deb/Release.key
+            dest: /etc/apt/trusted.gpg.d/kubernetes-apt-keyring.asc
+            checksum: sha256:5fe267a9ae47ffd566624057f2c8f64ab8a786a9c650e92cc22135381b04f12b
+        - name: kubernetes | apt source
+          ansible.builtin.apt_repository:
+            repo: "deb [signed-by=/etc/apt/trusted.gpg.d/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/v1.27/deb/ /"
+            state: present
+            update_cache: yes
+    - name: Install kubernetes binaries
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ k8s_binaries }}"
+    - name: Hold kubernetes binaries
+      ansible.builtin.dpkg_selections:
+        name: "{{ item }}"
+        selection: hold
+      loop: "{{ k8s_binaries }}"
+    - name: Enable the kubelet service
+      # sudo systemctl enable --now kubelet
+      ansible.builtin.systemd_service:
+        name: kubelet
+        state: started
+        enabled: true
+        masked: false

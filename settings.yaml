@@ -1,0 +1,8 @@
+vm:  
+  controlplane:
+    cpu: 2
+    memory: 4096
+  workers:
+    count: 2
+    cpu: 1
+    memory: 2048
