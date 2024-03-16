@@ -10,14 +10,16 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "controlplane" do |controlplane|
     controlplane.vm.hostname = "controlplane"
-    controlplane.vm.box = "generic/ubuntu2204"
+    controlplane.vm.box = controlplane_settings["box"]
 
     controlplane.vm.provider "virtualbox" do |vb|
       vb.cpus = controlplane_settings["cpu"]
       vb.memory = controlplane_settings["memory"]
     end
 
+    controlplane.vm.network "private_network", type: "dhcp"
     controlplane.vm.synced_folder "ansible/", "/vagrant/ansible", SharedFoldersEnableSymlinksCreate: false
+
     controlplane.vm.provision "ansible_local" do |ansible|
       ansible.playbook = "ansible/controlplane.yml"
       ansible.inventory_path = "ansible/inventory.ini"
@@ -34,14 +36,16 @@ Vagrant.configure("2") do |config|
   (1..worker_settings["count"]).each do |i|
     config.vm.define "node0#{i}" do |worker|
       worker.vm.hostname = "node0#{i}"
-      worker.vm.box = "generic/ubuntu2204"
+      worker.vm.box = worker_settings["box"]
 
       worker.vm.provider "virtualbox" do |vb|
         vb.cpus = worker_settings["cpu"]
         vb.memory = worker_settings["memory"]
       end
 
+      worker.vm.network "private_network", type: "dhcp"
       worker.vm.synced_folder "ansible/", "/vagrant/ansible", SharedFoldersEnableSymlinksCreate: false
+
       worker.vm.provision "ansible_local" do |ansible|
         ansible.playbook = "ansible/worker.yml"
         ansible.inventory_path = "ansible/inventory.ini"
