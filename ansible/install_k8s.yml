@@ -1,4 +1,79 @@
-- name: Install K8s binaries
+- name: disable SWAP
+  # reference: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#before-you-begin
+  hosts: all
+  tasks:
+    - name: disable SWAP
+      shell: |
+        swapoff -a
+    - name: disable SWAP in fstab
+      # this step makes sure it will stay disabled on reboot.
+      replace:
+        path: /etc/fstab
+        regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+        replace: '# \1'
+
+- name: configure network
+  # Reference: https://kubernetes.io/docs/setup/production-environment/container-runtimes/#install-and-configure-prerequisites
+  hosts: all
+  vars:
+    network_modules:
+      - overlay
+      - br_netfilter
+  tasks:
+    - name: Forwarding IPv4 and letting iptables see bridged traffic
+      copy:
+        dest: /etc/modules-load.d/k8s.conf
+        content: |
+          {% for module in network_modules %}
+          {{ module }}
+          {% endfor %}
+    - name: Add network modules
+      community.general.modprobe:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ network_modules }}"
+    - name: setting sysctl params, params persist across reboots
+      copy:
+        dest: /etc/sysctl.d/k8s.conf
+        content: |
+          net.bridge.bridge-nf-call-iptables  = 1
+          net.bridge.bridge-nf-call-ip6tables = 1
+          net.ipv4.ip_forward                 = 1
+      register: result
+    - shell: sysctl -p --system
+      become: yes
+      when: result.changed
+
+- name: install container runtime
+  # reference: https://github.com/cri-o/packaging
+  hosts: all
+  tasks:
+    - name: add cri-o apt
+      block:
+        - name: cri-o | apt key
+          ansible.builtin.get_url:
+            url: https://pkgs.k8s.io/addons:/cri-o:/prerelease:/main/deb/Release.key
+            dest: /etc/apt/trusted.gpg.d/cri-o-apt-keyring.asc
+            checksum: sha256:5fe267a9ae47ffd566624057f2c8f64ab8a786a9c650e92cc22135381b04f12b
+        - name: cri-o | apt source
+          ansible.builtin.apt_repository:
+            repo: "deb [signed-by=/etc/apt/trusted.gpg.d/cri-o-apt-keyring.asc] https://pkgs.k8s.io/addons:/cri-o:/prerelease:/main/deb/ /"
+            state: present
+            update_cache: yes
+        - name: Install cri-o binaries
+          ansible.builtin.apt:
+            name: cri-o
+            state: present
+        - name: Enable the cri-o service
+          # sudo systemctl enable --now cri-o
+          ansible.builtin.systemd_service:
+            name: cri-o
+            state: started
+            enabled: true
+            masked: false
+
+- name: install K8s binaries
+  # Reference: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl
   hosts: all
   vars:
     k8s_binaries:
