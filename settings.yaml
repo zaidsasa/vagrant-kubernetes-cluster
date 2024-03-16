@@ -1,4 +1,4 @@
-vm:  
+vm:
   controlplane:
     cpu: 2
     memory: 4096
@@ -6,3 +6,5 @@ vm:
     count: 2
     cpu: 1
     memory: 2048
+k8s:
+  version: 1.29
