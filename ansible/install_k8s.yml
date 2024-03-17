@@ -1,6 +1,7 @@
 - name: disable SWAP
   # reference: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#before-you-begin
   hosts: all
+  become: yes
   tasks:
     - name: disable SWAP
       shell: |
@@ -15,6 +16,7 @@
 - name: configure network
   # Reference: https://kubernetes.io/docs/setup/production-environment/container-runtimes/#install-and-configure-prerequisites
   hosts: all
+  become: yes
   vars:
     network_modules:
       - overlay
@@ -41,12 +43,12 @@
           net.ipv4.ip_forward                 = 1
       register: result
     - shell: sysctl -p --system
-      become: yes
       when: result.changed
 
 - name: install container runtime
   # reference: https://github.com/cri-o/packaging
   hosts: all
+  become: yes
   tasks:
     - name: add cri-o apt
       block:
@@ -75,6 +77,7 @@
 - name: install K8s binaries
   # Reference: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl
   hosts: all
+  become: yes
   vars:
     k8s_binaries:
       - kubeadm
@@ -104,7 +107,7 @@
         selection: hold
       loop: "{{ k8s_binaries }}"
     - name: Enable the kubelet service
-      # sudo systemctl enable --now kubelet
+      # systemctl enable --now kubelet
       ansible.builtin.systemd_service:
         name: kubelet
         state: started

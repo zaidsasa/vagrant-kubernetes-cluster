@@ -23,7 +23,6 @@ Vagrant.configure("2") do |config|
     controlplane.vm.provision "ansible_local" do |ansible|
       ansible.playbook = "ansible/controlplane.yml"
       ansible.inventory_path = "ansible/inventory.ini"
-      ansible.become = true
       ansible.extra_vars = {
         k8s_version: k8s_settings["version"]
       }
@@ -49,7 +48,6 @@ Vagrant.configure("2") do |config|
       worker.vm.provision "ansible_local" do |ansible|
         ansible.playbook = "ansible/worker.yml"
         ansible.inventory_path = "ansible/inventory.ini"
-        ansible.become = true
         ansible.extra_vars = {
           k8s_version: k8s_settings["version"]
         }
