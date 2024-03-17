@@ -1,18 +1,18 @@
 - import_playbook: install_k8s.yml
 
-- name: setup control-plane
+- name: Setup control plane
   hosts: controlplane
   tasks:
-    - name: pull kubeadm images
+    - name: Pull kubeadm images
       become: true
       shell: kubeadm config images pull
-    - name: Kubernetes status
+    - name: Determine Kubernetes status
       become: true
       command: kubectl --kubeconfig=/etc/kubernetes/admin.conf cluster-info
       ignore_errors: yes
       changed_when: false
       register: k8s_status
-    - name: initialize Kubernetes control-plane
+    - name: Initialize Kubernetes control plane
       become: true
       shell: |
         kubeadm init \
@@ -23,11 +23,11 @@
         --node-name "{{ ansible_nodename }}" \
         --ignore-preflight-errors Swap
       when: k8s_status.rc != 0
-    - name: create kube directory
+    - name: Create kube directory
       file:
         path: "{{ ansible_env.HOME }}/.kube"
         state: directory
-    - name: copy kube config
+    - name: Copy kube config
       become: true
       ansible.builtin.copy:
         src: /etc/kubernetes/admin.conf
