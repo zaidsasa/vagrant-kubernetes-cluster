@@ -4,9 +4,12 @@ vm:
     cpu: 2
     memory: 4096
   workers:
-    box: generic/ubuntu2204
     count: 2
+    box: generic/ubuntu2204
     cpu: 1
     memory: 2048
 k8s:
   version: 1.29
+  network:
+    pod_cidr: 172.16.1.0/16
+    service_cidr: 172.17.1.0/18

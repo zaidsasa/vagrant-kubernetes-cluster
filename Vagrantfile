@@ -24,7 +24,9 @@ Vagrant.configure("2") do |config|
       ansible.playbook = "ansible/controlplane.yml"
       ansible.inventory_path = "ansible/inventory.ini"
       ansible.extra_vars = {
-        k8s_version: k8s_settings["version"]
+        k8s_version: k8s_settings["version"],
+        k8s_network_pod_cidr: k8s_settings["network"]["pod_cidr"],
+        k8s_network_pod_service: k8s_settings["network"]["pod_service"]
       }
     end
 
@@ -49,7 +51,9 @@ Vagrant.configure("2") do |config|
         ansible.playbook = "ansible/worker.yml"
         ansible.inventory_path = "ansible/inventory.ini"
         ansible.extra_vars = {
-          k8s_version: k8s_settings["version"]
+          k8s_version: k8s_settings["version"],
+          k8s_network_pod_cidr: k8s_settings["network"]["pod_cidr"],
+          k8s_network_pod_service: k8s_settings["network"]["pod_service"]
         }
       end
 
