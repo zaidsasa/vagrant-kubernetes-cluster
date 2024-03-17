@@ -1,1 +1,38 @@
 - import_playbook: install_k8s.yml
+
+- name: setup control-plane
+  hosts: controlplane
+  tasks:
+    - name: pull kubeadm images
+      become: true
+      shell: kubeadm config images pull
+    - name: Kubernetes status
+      become: true
+      command: kubectl --kubeconfig=/etc/kubernetes/admin.conf cluster-info
+      ignore_errors: yes
+      changed_when: false
+      register: k8s_status
+    - name: initialize Kubernetes control-plane
+      become: true
+      shell: |
+        kubeadm init \
+        --apiserver-advertise-address={{ ansible_default_ipv4.address }} \
+        --apiserver-cert-extra-sans={{ ansible_default_ipv4.address }} \
+        --pod-network-cidr={{ k8s_network_pod_cidr }} \
+        --service-cidr={{ k8s_network_pod_service }} \
+        --node-name "{{ ansible_nodename }}" \
+        --ignore-preflight-errors Swap
+      when: k8s_status.rc != 0
+    - name: create kube directory
+      file:
+        path: "{{ ansible_env.HOME }}/.kube"
+        state: directory
+    - name: copy kube config
+      become: true
+      ansible.builtin.copy:
+        src: /etc/kubernetes/admin.conf
+        dest: "{{ ansible_env.HOME }}/.kube/config"
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_gid }}"
+        remote_src: true
+        force: true
