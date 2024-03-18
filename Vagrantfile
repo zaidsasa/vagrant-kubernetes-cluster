@@ -1,4 +1,5 @@
 require "yaml"
+
 vagrant_root = File.dirname(File.expand_path(__FILE__))
 
 settings = YAML.load_file "#{vagrant_root}/settings.yaml"
@@ -19,6 +20,7 @@ Vagrant.configure("2") do |config|
 
     controlplane.vm.network "private_network", type: "dhcp"
     controlplane.vm.synced_folder "ansible/", "/vagrant/ansible", SharedFoldersEnableSymlinksCreate: false
+    controlplane.vm.synced_folder ".tmp/", "/vagrant/tmp", create: true
 
     controlplane.vm.provision "ansible_local" do |ansible|
       ansible.playbook = "ansible/controlplane.yml"
@@ -46,6 +48,7 @@ Vagrant.configure("2") do |config|
 
       worker.vm.network "private_network", type: "dhcp"
       worker.vm.synced_folder "ansible/", "/vagrant/ansible", SharedFoldersEnableSymlinksCreate: false
+      worker.vm.synced_folder ".tmp/", "/vagrant/tmp", create: true
 
       worker.vm.provision "ansible_local" do |ansible|
         ansible.playbook = "ansible/worker.yml"
@@ -60,5 +63,7 @@ Vagrant.configure("2") do |config|
     end
 
   end
+
+  # TODO: Add trigger on destroy to delete .tmp folder
 
 end

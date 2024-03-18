@@ -16,8 +16,8 @@
       become: true
       shell: |
         kubeadm init \
-        --apiserver-advertise-address={{ ansible_default_ipv4.address }} \
-        --apiserver-cert-extra-sans={{ ansible_default_ipv4.address }} \
+        --apiserver-advertise-address={{ ansible_eth1.ipv4.address }} \
+        --apiserver-cert-extra-sans={{ ansible_eth1.ipv4.address }} \
         --pod-network-cidr={{ k8s_network_pod_cidr }} \
         --service-cidr={{ k8s_network_pod_service }} \
         --node-name "{{ ansible_nodename }}" \
@@ -35,4 +35,17 @@
         owner: "{{ ansible_user_id }}"
         group: "{{ ansible_user_gid }}"
         remote_src: true
+        force: true
+    - name: Save kube config to shared folder
+      ansible.builtin.copy:
+        src: "{{ ansible_env.HOME }}/.kube/config"
+        dest: /vagrant/tmp/kube-config
+        force: true
+    - name: Create token command
+      command: kubeadm token create --print-join-command
+      register: k8s_token_command
+    - name: Save token command to shared folder
+      ansible.builtin.copy:
+        content: "{{k8s_token_command.stdout}}"
+        dest: /vagrant/tmp/join.sh
         force: true
