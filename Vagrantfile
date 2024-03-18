@@ -28,7 +28,8 @@ Vagrant.configure("2") do |config|
       ansible.extra_vars = {
         k8s_version: k8s_settings["version"],
         k8s_network_pod_cidr: k8s_settings["network"]["pod_cidr"],
-        k8s_network_pod_service: k8s_settings["network"]["pod_service"]
+        k8s_network_pod_service: k8s_settings["network"]["pod_service"],
+        k8s_calico_version: k8s_settings["calico"]["version"],
       }
     end
 

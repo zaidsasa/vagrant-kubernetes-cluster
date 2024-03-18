@@ -10,6 +10,8 @@ vm:
     memory: 2048
 k8s:
   version: 1.29
+  calico:
+    version: 3.27.2
   network:
     pod_cidr: 172.16.1.0/16
     service_cidr: 172.17.1.0/18

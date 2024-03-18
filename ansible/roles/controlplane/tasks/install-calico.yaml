@@ -1,0 +1,15 @@
+- name: Install python package installer
+  become: true
+  ansible.builtin.apt:
+    name: pip
+    state: present
+
+- name: install ansible python pre-requisites packages
+  ansible.builtin.pip:
+    name:
+      - kubernetes
+
+- name: "Install Calico {{ k8s_calico_version }}"
+  kubernetes.core.k8s:
+    state: present
+    src: "https://raw.githubusercontent.com/projectcalico/calico/v{{ k8s_calico_version }}/manifests/tigera-operator.yaml"
