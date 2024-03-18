@@ -1,0 +1,32 @@
+# Reference: https://kubernetes.io/docs/setup/production-environment/container-runtimes/#install-and-configure-prerequisites
+
+- name: Forwarding IPv4 and letting iptables see bridged traffic
+  become: true
+  copy:
+    dest: /etc/modules-load.d/k8s.conf
+    content: |
+      {% for module in network_modules %}
+      {{ module }}
+      {% endfor %}
+
+- name: Add network modules
+  become: true
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ network_modules }}"
+
+- name: Setting sysctl params, params persist across reboots
+  become: true
+  copy:
+    dest: /etc/sysctl.d/k8s.conf
+    content: |
+      net.bridge.bridge-nf-call-iptables  = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
+      net.ipv4.ip_forward                 = 1
+  register: result
+
+- name: Apply sysctl params without reboot
+  become: true
+  shell: sysctl -p --system
+  when: result.changed

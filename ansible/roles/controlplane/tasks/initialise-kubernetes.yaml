@@ -1,0 +1,22 @@
+- name: Pull kubeadm images
+  become: true
+  shell: kubeadm config images pull
+
+- name: Determine Kubernetes status
+  become: true
+  command: kubectl --kubeconfig=/etc/kubernetes/admin.conf cluster-info
+  ignore_errors: true
+  changed_when: false
+  register: k8s_status
+
+- name: Initialize Kubernetes control plane
+  become: true
+  shell: |
+    kubeadm init \
+    --apiserver-advertise-address={{ ansible_eth1.ipv4.address }} \
+    --apiserver-cert-extra-sans={{ ansible_eth1.ipv4.address }} \
+    --pod-network-cidr={{ k8s_network_pod_cidr }} \
+    --service-cidr={{ k8s_network_pod_service }} \
+    --node-name "{{ ansible_nodename }}" \
+    --ignore-preflight-errors Swap
+  when: k8s_status.rc != 0

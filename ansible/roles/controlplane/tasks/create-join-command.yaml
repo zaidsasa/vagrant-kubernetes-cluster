@@ -1,0 +1,9 @@
+- name: Create token command
+  command: kubeadm token create --print-join-command
+  register: k8s_token_command
+
+- name: Save token command to shared folder
+  ansible.builtin.copy:
+    content: "{{k8s_token_command.stdout}}"
+    dest: /vagrant/tmp/join.sh
+    force: true

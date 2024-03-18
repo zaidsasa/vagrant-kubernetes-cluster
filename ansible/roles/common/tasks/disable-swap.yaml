@@ -1,0 +1,14 @@
+# reference: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#before-you-begin
+
+- name: Disable SWAP
+  become: true
+  shell: |
+    swapoff -a
+
+# This step makes sure it will stay disabled on reboot.
+- name: Disable SWAP in fstab
+  become: true
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'
