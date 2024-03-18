@@ -1,0 +1,10 @@
+- name: Install python package installer
+  become: true
+  ansible.builtin.apt:
+    name: pip
+    state: present
+
+- name: install ansible python pre-requisites packages
+  pip:
+    name:
+      - kubernetes
