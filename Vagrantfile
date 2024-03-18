@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
     controlplane.vm.synced_folder ".tmp/", "/vagrant/tmp", create: true
 
     controlplane.vm.provision "ansible_local" do |ansible|
-      ansible.playbook = "ansible/controlplane.yml"
+      ansible.playbook = "ansible/controlplane.yaml"
       ansible.inventory_path = "ansible/inventory.ini"
       ansible.extra_vars = {
         k8s_version: k8s_settings["version"],
@@ -34,24 +34,24 @@ Vagrant.configure("2") do |config|
 
   end
 
-  worker_settings = settings["vm"]["workers"]
+  node_settings = settings["vm"]["node"]
 
-  (1..worker_settings["count"]).each do |i|
-    config.vm.define "node0#{i}" do |worker|
-      worker.vm.hostname = "node0#{i}"
-      worker.vm.box = worker_settings["box"]
+  (1..node_settings["count"]).each do |i|
+    config.vm.define "node0#{i}" do |node|
+      node.vm.hostname = "node0#{i}"
+      node.vm.box = node_settings["box"]
 
-      worker.vm.provider "virtualbox" do |vb|
-        vb.cpus = worker_settings["cpu"]
-        vb.memory = worker_settings["memory"]
+      node.vm.provider "virtualbox" do |vb|
+        vb.cpus = node_settings["cpu"]
+        vb.memory = node_settings["memory"]
       end
 
-      worker.vm.network "private_network", type: "dhcp"
-      worker.vm.synced_folder "ansible/", "/vagrant/ansible", SharedFoldersEnableSymlinksCreate: false
-      worker.vm.synced_folder ".tmp/", "/vagrant/tmp", create: true
+      node.vm.network "private_network", type: "dhcp"
+      node.vm.synced_folder "ansible/", "/vagrant/ansible", SharedFoldersEnableSymlinksCreate: false
+      node.vm.synced_folder ".tmp/", "/vagrant/tmp", create: true
 
-      worker.vm.provision "ansible_local" do |ansible|
-        ansible.playbook = "ansible/worker.yml"
+      node.vm.provision "ansible_local" do |ansible|
+        ansible.playbook = "ansible/node.yaml"
         ansible.inventory_path = "ansible/inventory.ini"
         ansible.extra_vars = {
           k8s_version: k8s_settings["version"],

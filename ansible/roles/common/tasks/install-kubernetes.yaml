@@ -1,0 +1,38 @@
+# Reference: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl
+
+- name: Add kubernetes apt key
+  become: true
+  ansible.builtin.get_url:
+    url: "https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/Release.key"
+    dest: /etc/apt/trusted.gpg.d/kubernetes-apt-keyring.asc
+    checksum: sha256:5fe267a9ae47ffd566624057f2c8f64ab8a786a9c650e92cc22135381b04f12b
+
+- name: Add kubernetes apt source
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/trusted.gpg.d/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/ /"
+    state: present
+    update_cache: yes
+
+- name: Install kubernetes packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ k8s_packages }}"
+
+- name: Hold kubernetes packages
+  become: true
+  ansible.builtin.dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop: "{{ k8s_packages }}"
+
+# systemctl enable --now kubelet
+- name: Enable the kubelet service
+  become: true
+  ansible.builtin.systemd_service:
+    name: kubelet
+    state: started
+    enabled: true
+    masked: false

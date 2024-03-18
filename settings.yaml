@@ -2,8 +2,8 @@ vm:
   controlplane:
     box: generic/ubuntu2204
     cpu: 2
-    memory: 4096
-  workers:
+    memory: 2048
+  node:
     count: 2
     box: generic/ubuntu2204
     cpu: 1

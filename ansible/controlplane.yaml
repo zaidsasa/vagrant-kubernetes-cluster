@@ -1,0 +1,4 @@
+- hosts: controlplane
+  roles:
+    - common
+    - controlplane
