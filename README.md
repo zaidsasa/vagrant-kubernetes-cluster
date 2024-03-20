@@ -14,6 +14,12 @@ Practice environment for Kubernetes Certifications including CKA, CKAD, and CKS.
 [vagrant]: https://developer.hashicorp.com/vagrant/install
 [virtualbox]: https://www.virtualbox.org/wiki/Downloads
 
+## What is included?
+
+1. Container Runtime Interface (CRI): cri-o
+2. Container Network Interface (CNI): calico 3.27.2 (Default)
+3. kubernetes: 1.29 (Default)
+
 ## Run Environment
 
 ```
