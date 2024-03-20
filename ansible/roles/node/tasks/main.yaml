@@ -1,5 +1,13 @@
+- name: Copy kube config
+  ansible.builtin.copy:
+    src: /vagrant/tmp/kube-config
+    dest: "{{ ansible_env.HOME }}/.kube/config"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+    force: true
+
 - name: Determine K8s node status
-  command: "kubectl --kubeconfig=/vagrant/tmp/kube-config wait --for=condition=Ready nodes/{{ ansible_nodename }} --all --timeout=1s"
+  command: "kubectl wait --for=condition=Ready nodes/{{ ansible_nodename }} --all --timeout=1s"
   ignore_errors: true
   changed_when: false
   register: k8s_node_status
@@ -8,11 +16,3 @@
   become: true
   shell: bash /vagrant/tmp/join.sh
   when: k8s_node_status.rc != 0
-
-- name: Copy kube config
-  ansible.builtin.copy:
-    src: /vagrant/tmp/kube-config
-    dest: "{{ ansible_env.HOME }}/.kube/config"
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_gid }}"
-    force: true
