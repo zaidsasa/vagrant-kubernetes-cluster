@@ -17,7 +17,7 @@ Practice environment for Kubernetes Certifications including CKA, CKAD, and CKS.
 ## What is included?
 
 1. Container Runtime Interface (CRI): cri-o
-2. Container Network Interface (CNI): calico 3.27.2 (Default)
+2. Container Network Interface (CNI): calico 3.27.3 (Default)
 3. Kubernetes: 1.29 (Default)
 
 ## Run Environment
