@@ -2,8 +2,6 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/zaidsasa/kubernetes-practice-environment/blob/main/LICENSE)
 
-> :warning: **This project is currently under development.** :warning:
-
 Practice environment for Kubernetes Certifications including CKA, CKAD, and CKS.
 
 ## Prerequisites
@@ -20,10 +18,27 @@ Practice environment for Kubernetes Certifications including CKA, CKAD, and CKS.
 2. Container Network Interface (CNI): calico 3.27.3 (Default)
 3. Kubernetes: 1.29 (Default)
 
-## Run Environment
-
+## Create a Kubernetes practice cluster
+To create the cluster, execute the following commands.
 ```
+git clone https://github.com/zaidsasa/kubernetes-practice-environment.git
+cd kubernetes-practice-environment
 vagrant up
+```
+
+## Set Kubeconfig variable
+```
+export KUBECONFIG=$(pwd)/.tmp/kube-config
+```
+
+## To shutdown the cluster
+```
+vagrant halt
+```
+
+## To destroy the cluster
+```
+vagrant destroy -f
 ```
 
 ## Contributing
