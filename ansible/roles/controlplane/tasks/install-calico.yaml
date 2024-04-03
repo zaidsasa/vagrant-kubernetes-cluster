@@ -1,4 +1,4 @@
 - name: "Install Calico {{ k8s_calico_version }}"
   kubernetes.core.k8s:
     state: present
-    src: "https://raw.githubusercontent.com/projectcalico/calico/v{{ k8s_calico_version }}/manifests/tigera-operator.yaml"
+    src: "https://raw.githubusercontent.com/projectcalico/calico/v{{ k8s_calico_version }}/manifests/calico.yaml"
