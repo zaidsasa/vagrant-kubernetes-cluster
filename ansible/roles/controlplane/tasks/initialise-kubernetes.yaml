@@ -4,7 +4,7 @@
 
 - name: Determine Kubernetes status
   become: true
-  command: kubectl --kubeconfig=/etc/kubernetes/admin.conf cluster-info
+  command: kubectl --kubeconfig={{ kubeadmin_config }} cluster-info
   ignore_errors: true
   changed_when: false
   register: k8s_status
