@@ -1,1 +1,4 @@
 kubeadmin_config: /etc/kubernetes/admin.conf
+
+k8s_dashboard_enable: false
+k8s_dashboard_state: "{% if k8s_dashboard_enable == true %}present{% else %}absent{% endif %}"

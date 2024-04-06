@@ -31,6 +31,28 @@ vagrant up
 export KUBECONFIG=$(pwd)/.tmp/kube-config
 ```
 
+## Kubernetes Dashboard
+
+### Install Kubernetes Dashboard
+you can enable it in settings.yaml and running the following:
+```
+vagrant provision
+```
+
+### Access Kubernetes Dashboard
+To get the login token, run the following command:
+```
+kubectl -n kubernetes-dashboard get secret/admin-user -o go-template="{{.data.token | base64decode}}"
+```
+Make the dashboard accessible:
+```
+kubectl proxy
+```
+Open the site in your browser:
+```
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=kubernetes-dashboard
+```
+
 ## To shutdown the cluster
 ```
 vagrant halt
