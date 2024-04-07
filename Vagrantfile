@@ -31,6 +31,14 @@ Vagrant.configure("2") do |config|
         k8s_network_pod_service: k8s_settings["network"]["pod_service"],
         k8s_calico_version: k8s_settings["calico"]["version"],
       }
+
+      if k8s_settings["dashboard"] and k8s_settings["dashboard"]["enable"]
+        ansible.extra_vars["k8s_dashboard_enable"] = k8s_settings["dashboard"]["enable"]
+      end
+
+      if k8s_settings["dashboard"] and k8s_settings["dashboard"]["version"]
+        ansible.extra_vars["k8s_dashboard_version"] = k8s_settings["dashboard"]["version"]
+      end
     end
 
   end

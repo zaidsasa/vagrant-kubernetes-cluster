@@ -2,3 +2,5 @@
 - include_tasks: tasks/configure-kubeconfig.yaml
 - include_tasks: tasks/create-join-command.yaml
 - include_tasks: tasks/install-calico.yaml
+- import_tasks: tasks/install-dashboard.yaml
+  when: k8s_dashboard_version is defined

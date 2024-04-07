@@ -1,0 +1,9 @@
+- name: "Install Dashboard `{{ k8s_dashboard_version }}` (State: `{{ k8s_dashboard_state }}` ) "
+  kubernetes.core.k8s:
+    state: "{{ k8s_dashboard_state }}"
+    src: "https://raw.githubusercontent.com/kubernetes/dashboard/v{{ k8s_dashboard_version }}/aio/deploy/recommended.yaml"
+
+- name: "Install Dashboard Service Account Token (State: `{{ k8s_dashboard_state }}` ) "
+  kubernetes.core.k8s:
+    state: "{{ k8s_dashboard_state }}"
+    src: k8s/dashboard/service-account-token.yaml
