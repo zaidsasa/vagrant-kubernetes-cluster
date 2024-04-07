@@ -36,7 +36,7 @@ export KUBECONFIG=$(pwd)/.tmp/kube-config
 ### Install Kubernetes Dashboard
 you can enable it in settings.yaml and running the following:
 ```
-vagrant provision
+vagrant provision controlplane
 ```
 
 ### Access Kubernetes Dashboard

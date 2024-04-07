@@ -6,4 +6,4 @@
 - name: "Install Dashboard Service Account Token (State: `{{ k8s_dashboard_state }}` ) "
   kubernetes.core.k8s:
     state: "{{ k8s_dashboard_state }}"
-    src: dashboard-token.yaml
+    src: k8s/dashboard/service-account-token.yaml
