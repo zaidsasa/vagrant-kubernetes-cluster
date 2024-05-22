@@ -11,7 +11,7 @@ vm:
 k8s:
   version: 1.29
   calico:
-    version: 3.27.3
+    version: 3.28.0
   dashboard:
     version: 2.7.0
     # enable: true
