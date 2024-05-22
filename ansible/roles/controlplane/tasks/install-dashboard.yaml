@@ -1,9 +1,19 @@
-- name: "Install Dashboard `{{ k8s_dashboard_version }}` (State: `{{ k8s_dashboard_state }}` ) "
-  kubernetes.core.k8s:
+- name: "Add Dashboard Helm Chart Repo (State: `{{ k8s_dashboard_state }}` ) "
+  kubernetes.core.helm_repository:
+    name: kubernetes-dashboard
     state: "{{ k8s_dashboard_state }}"
-    src: "https://raw.githubusercontent.com/kubernetes/dashboard/v{{ k8s_dashboard_version }}/aio/deploy/recommended.yaml"
+    repo_url: "https://kubernetes.github.io/dashboard"
 
-- name: "Install Dashboard Service Account Token (State: `{{ k8s_dashboard_state }}` ) "
+- name: "Install Dashboard `{{ k8s_dashboard_version }}` Helm Chart (State: `{{ k8s_dashboard_state }}` ) "
+  kubernetes.core.helm:
+    name: kubernetes-dashboard
+    chart_ref: kubernetes-dashboard/kubernetes-dashboard
+    chart_version: "{{ k8s_dashboard_version }}"
+    release_namespace: kubernetes-dashboard
+    create_namespace: true
+    release_state: "{{ k8s_dashboard_state }}"
+
+- name: "Install Dashboard Service Account (State: `{{ k8s_dashboard_state }}` ) "
   kubernetes.core.k8s:
     state: "{{ k8s_dashboard_state }}"
-    src: k8s/dashboard/service-account-token.yaml
+    src: k8s/dashboard/service-account.yaml
