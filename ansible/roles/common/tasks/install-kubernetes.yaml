@@ -28,6 +28,13 @@
     selection: hold
   loop: "{{ k8s_packages }}"
 
+- name: Setting Kubelet Environments
+  become: true
+  copy:
+    dest: /etc/default/kubelet
+    content: |
+      KUBELET_EXTRA_ARGS=--node-ip={{ ansible_eth1.ipv4.address }}
+
 # systemctl enable --now kubelet
 - name: Enable the kubelet service
   become: true
