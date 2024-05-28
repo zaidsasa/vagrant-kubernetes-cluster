@@ -1,11 +1,11 @@
 vm:
   controlplane:
-    box: generic/ubuntu2204
+    box: bento/ubuntu-22.04
     cpu: 2
     memory: 2048
   node:
     count: 2
-    box: generic/ubuntu2204
+    box: bento/ubuntu-22.04
     cpu: 1
     memory: 2048
 k8s:
