@@ -1,8 +1,26 @@
 require "yaml"
 
+class IPBlocks
+  def initialize(cidr)
+      ips = []
+      for a in 1..10 do
+          v = IPAddr.new(cidr)|a
+          ips.append(v)  
+      end
+      @ips = ips
+  end
+
+  def GetNewIP()
+      return @ips.shift(1)[0].to_s
+    end
+end
+
 vagrant_root = File.dirname(File.expand_path(__FILE__))
 
 settings = YAML.load_file "#{vagrant_root}/settings.yaml"
+
+ipBlocks = IPBlocks.new("10.0.0.10")
+
 k8s_settings = settings["k8s"]
 
 Vagrant.configure("2") do |config|
@@ -18,7 +36,7 @@ Vagrant.configure("2") do |config|
       vb.memory = controlplane_settings["memory"]
     end
 
-    controlplane.vm.network "private_network", type: "dhcp"
+    controlplane.vm.network "private_network", ip: ipBlocks.GetNewIP()
     controlplane.vm.synced_folder "ansible/", "/vagrant/ansible", SharedFoldersEnableSymlinksCreate: false
     controlplane.vm.synced_folder ".tmp/", "/vagrant/tmp", create: true
 
@@ -55,7 +73,7 @@ Vagrant.configure("2") do |config|
         vb.memory = node_settings["memory"]
       end
 
-      node.vm.network "private_network", type: "dhcp"
+      node.vm.network "private_network", ip: ipBlocks.GetNewIP()
       node.vm.synced_folder "ansible/", "/vagrant/ansible", SharedFoldersEnableSymlinksCreate: false
       node.vm.synced_folder ".tmp/", "/vagrant/tmp", create: true
 
