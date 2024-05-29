@@ -2,3 +2,11 @@
   kubernetes.core.k8s:
     state: present
     src: "https://raw.githubusercontent.com/projectcalico/calico/v{{ k8s_calico_version }}/manifests/calico.yaml"
+  register: calico_status
+
+# BUG:https://github.com/zaidsasa/kubernetes-practice-environment/issues/27
+- name: Rollout restart CoreDNS
+  shell: /bin/bash -c "kubectl rollout restart deployments/coredns -n kube-system"
+  environment:
+    KUBECONFIG: "{{ ansible_env.HOME }}/.kube/config"
+  when: calico_status.changed
