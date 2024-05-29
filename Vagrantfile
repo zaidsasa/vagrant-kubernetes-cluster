@@ -19,13 +19,13 @@ vagrant_root = File.dirname(File.expand_path(__FILE__))
 
 settings = YAML.load_file "#{vagrant_root}/settings.yaml"
 
-ipBlocks = IPBlocks.new("10.0.0.10")
+ipBlocks = IPBlocks.new(settings["vm"]["network"]["cidr"])
 
 k8s_settings = settings["k8s"]
 
 Vagrant.configure("2") do |config|
 
-  controlplane_settings = settings["vm"]["controlplane"]
+  controlplane_settings = settings["vm"]["cluster"]["controlplane"]
 
   config.vm.define "controlplane" do |controlplane|
     controlplane.vm.hostname = "controlplane"
@@ -61,7 +61,7 @@ Vagrant.configure("2") do |config|
 
   end
 
-  node_settings = settings["vm"]["node"]
+  node_settings = settings["vm"]["cluster"]["node"]
 
   (1..node_settings["count"]).each do |i|
     config.vm.define "node0#{i}" do |node|
