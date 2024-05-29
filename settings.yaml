@@ -1,13 +1,16 @@
 vm:
-  controlplane:
-    box: bento/ubuntu-22.04
-    cpu: 2
-    memory: 2048
-  node:
-    count: 2
-    box: bento/ubuntu-22.04
-    cpu: 1
-    memory: 2048
+  network:
+    cidr: "10.10.0.10/32"
+  cluster:
+    controlplane:
+      box: bento/ubuntu-22.04
+      cpu: 2
+      memory: 2048
+    node:
+      count: 2
+      box: bento/ubuntu-22.04
+      cpu: 1
+      memory: 2048
 k8s:
   version: 1.29
   calico:
