@@ -1,10 +1,10 @@
 require "yaml"
 
 class IPBlocks
-  def initialize(cidr)
+  def initialize(cidr, length, skipFirstIPsCount = 0)
       ips = []
-      for a in 1..10 do
-          v = IPAddr.new(cidr)|a
+      for a in 1..length do
+          v = IPAddr.new(cidr)|a +skipFirstIPsCount
           ips.append(v)  
       end
       @ips = ips
@@ -19,7 +19,9 @@ vagrant_root = File.dirname(File.expand_path(__FILE__))
 
 settings = YAML.load_file "#{vagrant_root}/settings.yaml"
 
-ipBlocks = IPBlocks.new(settings["vm"]["network"]["cidr"])
+node_settings = settings["vm"]["cluster"]["node"]
+
+ipBlocks = IPBlocks.new(settings["vm"]["network"]["cidr"], node_settings["count"] + 1, 10)
 
 k8s_settings = settings["k8s"]
 
@@ -60,8 +62,6 @@ Vagrant.configure("2") do |config|
     end
 
   end
-
-  node_settings = settings["vm"]["cluster"]["node"]
 
   (1..node_settings["count"]).each do |i|
     config.vm.define "node0#{i}" do |node|
