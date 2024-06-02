@@ -1,6 +1,6 @@
 vm:
   network:
-    cidr: "10.10.0.10/32"
+    cidr: "10.10.0.0/16"
   cluster:
     controlplane:
       box: bento/ubuntu-22.04
