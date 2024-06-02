@@ -39,8 +39,7 @@ Vagrant.configure("2") do |config|
     end
 
     controlplane.vm.network "private_network", ip: ipBlocks.GetNewIP()
-    controlplane.vm.synced_folder "ansible/", "/vagrant/ansible", SharedFoldersEnableSymlinksCreate: false
-    controlplane.vm.synced_folder ".tmp/", "/vagrant/tmp", create: true
+    controlplane.vm.synced_folder ".tmp/", "/vagrant/.tmp", create: true
 
     controlplane.vm.provision "ansible_local" do |ansible|
       ansible.playbook = "ansible/controlplane.yaml"
@@ -74,8 +73,6 @@ Vagrant.configure("2") do |config|
       end
 
       node.vm.network "private_network", ip: ipBlocks.GetNewIP()
-      node.vm.synced_folder "ansible/", "/vagrant/ansible", SharedFoldersEnableSymlinksCreate: false
-      node.vm.synced_folder ".tmp/", "/vagrant/tmp", create: true
 
       node.vm.provision "ansible_local" do |ansible|
         ansible.playbook = "ansible/node.yaml"

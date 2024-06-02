@@ -5,5 +5,5 @@
 - name: Save token command to shared folder
   ansible.builtin.copy:
     content: "{{k8s_token_command.stdout}}"
-    dest: /vagrant/tmp/join.sh
+    dest: /vagrant/.tmp/join.sh
     force: true
