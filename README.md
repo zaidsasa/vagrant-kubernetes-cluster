@@ -42,15 +42,15 @@ vagrant provision controlplane
 ### Access Kubernetes Dashboard
 To get the login token, run the following command:
 ```
-kubectl -n kubernetes-dashboard get secret/admin-user -o go-template="{{.data.token | base64decode}}"
+kubectl -n kubernetes-dashboard create token admin-user
 ```
 Make the dashboard accessible:
 ```
-kubectl proxy
+kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
 ```
 Open the site in your browser:
 ```
-http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=kubernetes-dashboard
+https://localhost:8443/
 ```
 
 ## To shutdown the cluster
