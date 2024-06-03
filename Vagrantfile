@@ -2,17 +2,17 @@ require "yaml"
 
 class IPBlocks
   def initialize(cidr, length, skipFirstIPsCount = 0)
-      ips = []
-      for a in 1..length do
-          v = IPAddr.new(cidr)|a +skipFirstIPsCount
-          ips.append(v)  
-      end
-      @ips = ips
+    ips = []
+    for a in 1..length do
+      v = IPAddr.new(cidr)|a +skipFirstIPsCount
+      ips.append(v)
+    end
+    @ips = ips
   end
 
   def GetNewIP()
-      return @ips.shift(1)[0].to_s
-    end
+    return @ips.shift(1)[0].to_s
+  end
 end
 
 vagrant_root = File.dirname(File.expand_path(__FILE__))
@@ -59,7 +59,6 @@ Vagrant.configure("2") do |config|
         ansible.extra_vars["k8s_dashboard_version"] = k8s_settings["dashboard"]["version"]
       end
     end
-
   end
 
   (1..node_settings["count"]).each do |i|
@@ -83,11 +82,6 @@ Vagrant.configure("2") do |config|
           k8s_network_pod_service: k8s_settings["network"]["pod_service"]
         }
       end
-
     end
-
   end
-
-  # TODO: Add trigger on destroy to delete .tmp folder
-
 end
