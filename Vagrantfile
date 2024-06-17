@@ -44,6 +44,8 @@ Vagrant.configure("2") do |config|
     controlplane.vm.provision "ansible_local" do |ansible|
       ansible.playbook = "ansible/controlplane.yaml"
       ansible.inventory_path = "ansible/inventory.ini"
+      ansible.install_mode = "pip_args_only"
+      ansible.pip_args = "-r /vagrant/requirements.txt"
       ansible.extra_vars = {
         k8s_version: k8s_settings["version"],
         k8s_network_pod_cidr: k8s_settings["network"]["pod_cidr"],
@@ -72,10 +74,11 @@ Vagrant.configure("2") do |config|
       end
 
       node.vm.network "private_network", ip: ipBlocks.GetNewIP()
-
       node.vm.provision "ansible_local" do |ansible|
         ansible.playbook = "ansible/node.yaml"
         ansible.inventory_path = "ansible/inventory.ini"
+        ansible.install_mode = "pip_args_only"
+        ansible.pip_args = "-r /vagrant/requirements.txt"
         ansible.extra_vars = {
           k8s_version: k8s_settings["version"],
           k8s_network_pod_cidr: k8s_settings["network"]["pod_cidr"],
