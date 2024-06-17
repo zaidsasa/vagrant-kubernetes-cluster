@@ -17,6 +17,7 @@ Practice environment for Kubernetes Certifications including CKA, CKAD, and CKS.
 1. Container Runtime Interface (CRI): cri-o
 2. Container Network Interface (CNI): calico 3.28.0 (Default)
 3. Kubernetes: 1.29 (Default)
+4. [Kubernetes Dashboard](#kubernetes-dashboard): 7.5.0
 
 ## Create a Kubernetes practice cluster
 To create the cluster, execute the following commands.
