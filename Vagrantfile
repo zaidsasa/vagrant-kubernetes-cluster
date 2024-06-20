@@ -11,7 +11,22 @@ ipBlocks = IPBlocks.new(settings["vm"]["network"]["cidr"], node_settings["count"
 
 k8s_settings = settings["k8s"]
 
+controlplane_private_ip = ipBlocks.GetNewIP()
+
 Vagrant.configure("2") do |config|
+  (1..node_settings["count"]).each do |i|
+    config.vm.define "node0#{i}" do |node|
+      node.vm.hostname = "node0#{i}"
+      node.vm.box = node_settings["box"]
+
+      node.vm.provider "virtualbox" do |vb|
+        vb.cpus = node_settings["cpu"]
+        vb.memory = node_settings["memory"]
+      end
+
+      node.vm.network "private_network", ip: ipBlocks.GetNewIP()
+    end
+  end
 
   controlplane_settings = settings["vm"]["cluster"]["controlplane"]
 
@@ -24,7 +39,7 @@ Vagrant.configure("2") do |config|
       vb.memory = controlplane_settings["memory"]
     end
 
-    controlplane.vm.network "private_network", ip: ipBlocks.GetNewIP()
+    controlplane.vm.network "private_network", ip: controlplane_private_ip
     controlplane.vm.synced_folder ".tmp/", "/vagrant/.tmp", create: true
   end
 
@@ -47,6 +62,7 @@ Vagrant.configure("2") do |config|
     ansible.inventory_path= "provisioning/inventory"
     ansible.install_mode = "pip_args_only"
     ansible.pip_args = "-r /vagrant/provisioning/requirements.txt"
+    ansible.limit = "all"
     ansible.extra_vars = {
       k8s_version: k8s_settings["version"],
       k8s_network_pod_cidr: k8s_settings["network"]["pod_cidr"],

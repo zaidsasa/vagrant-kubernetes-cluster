@@ -1,11 +1,6 @@
-[controlplane]
-controlplane
-
-[controlplane:vars]
-ansible_connection=local
+controlplane ansible_connection=local
+node01        ansible_host=10.10.0.12 ansible_ssh_private_key_file=/vagrant/.vagrant/machines/node01/virtualbox/private_key
+node02        ansible_host=10.10.0.13 ansible_ssh_private_key_file=/vagrant/.vagrant/machines/node02/virtualbox/private_key
 
 [nodes]
 node[01:10]
-
-[nodes:vars]
-ansible_connection=local
