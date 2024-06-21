@@ -1,0 +1,11 @@
+- hosts: all
+  roles:
+    - common
+
+- hosts: controlplane
+  roles:
+    - controlplane
+
+- hosts: nodes
+  roles:
+    - node
