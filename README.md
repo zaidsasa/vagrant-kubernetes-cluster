@@ -29,7 +29,7 @@ vagrant up
 
 ## Set Kubeconfig variable
 ```
-export KUBECONFIG=$(pwd)/.tmp/kube-config
+export KUBECONFIG=$(pwd)/.vagrant/k8s/config
 ```
 
 ## Kubernetes Dashboard
