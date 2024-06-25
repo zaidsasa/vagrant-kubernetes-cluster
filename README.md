@@ -29,7 +29,7 @@ vagrant up
 
 ## Set Kubeconfig variable
 ```
-export KUBECONFIG=$(pwd)/.tmp/kube-config
+export KUBECONFIG=$(pwd)/.vagrant/k8s/config
 ```
 
 ## Kubernetes Dashboard
@@ -37,7 +37,7 @@ export KUBECONFIG=$(pwd)/.tmp/kube-config
 ### Install Kubernetes Dashboard
 you can enable it in settings.yaml and running the following:
 ```
-vagrant provision controlplane
+vagrant provision
 ```
 
 ### Access Kubernetes Dashboard

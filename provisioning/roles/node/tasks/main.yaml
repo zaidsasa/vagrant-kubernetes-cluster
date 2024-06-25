@@ -5,7 +5,7 @@
 
 - name: Copy kube config
   ansible.builtin.copy:
-    src: /vagrant/.tmp/kube-config
+    src: /vagrant/.vagrant/k8s/config
     dest: "{{ ansible_env.HOME }}/.kube/config"
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_gid }}"
@@ -19,5 +19,5 @@
 
 - name: Join K8s cluster
   become: true
-  shell: bash /vagrant/.tmp/join.sh
+  shell: bash /vagrant/.vagrant/k8s/join.sh
   when: k8s_node_status.rc != 0

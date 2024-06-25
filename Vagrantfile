@@ -45,7 +45,6 @@ Vagrant.configure("2") do |config|
     end
 
     controlplane.vm.network "private_network", ip: controlplane_private_ip
-    controlplane.vm.synced_folder ".tmp/", "/vagrant/.tmp", create: true
 
     controlplane.vm.provision "ansible_local" do |ansible|
       dynamicInventory.Generate()
