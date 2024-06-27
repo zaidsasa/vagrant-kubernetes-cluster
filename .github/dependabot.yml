@@ -7,17 +7,6 @@ updates:
     labels:
       - pip
       - dependencies
-    groups:
-      k8s:
-        patterns:
-          - "kubernetes"
-        update-types:
-          - "minor"
-          - "patch"
-      ansible:
-        patterns:
-          - "ansible"
-        update-types:
-          - "major"
-          - "minor"
-          - "patch"
+    ignore:
+      - dependency-name: "kubernetes"
+        versions: [">= 30.0.0"]
