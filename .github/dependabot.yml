@@ -9,14 +9,12 @@ updates:
       - dependencies
     groups:
       k8s:
-        applies-to: version-updates
         patterns:
           - "kubernetes"
         update-types:
           - "minor"
           - "patch"
       ansible:
-        applies-to: version-updates
         patterns:
           - "ansible"
         update-types:
