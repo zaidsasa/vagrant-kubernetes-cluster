@@ -1,8 +1,8 @@
-# Kubernetes Practice Environment
+# Vagrant Kubernetes Cluster
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/zaidsasa/kubernetes-practice-environment/blob/main/LICENSE)
 
-Practice environment for Kubernetes Certifications including CKA, CKAD, and CKS.
+A Kubernetes practice cluster for CKA, CKAD, and CKS certifications using Vagrant and Ansible.
 
 ## Prerequisites
 
